@@ -1,26 +1,26 @@
 #coding:gbk
 """
-ÀûÓÃ¾ö²ßÊ÷Ëã·¨½øĞĞ·ÖÀà
-×÷Õß£º
-ÈÕÆÚ£º
+åˆ©ç”¨å†³ç­–æ ‘ç®—æ³•è¿›è¡Œåˆ†ç±»
+ä½œè€…ï¼šå‘¨æ¢¦é›¯
+æ—¥æœŸï¼š2019.12.19
 """
-import pandas as pd           # µ÷ÈëĞèÒªÓÃµÄ¿â
+import pandas as pd           # è°ƒå…¥éœ€è¦ç”¨çš„åº“
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import seaborn as sb
 #%matplotlib inline
-# µ÷ÈëÊı¾İ
+# è°ƒå…¥æ•°æ®
 df = pd.read_csv('frenchwine.csv')
 df.columns = ['species','alcohol', 'malic_acid', 'ash', 'alcalinity ash','magnesium']
-# ²é¿´Ç°5ÌõÊı¾İ
+# æŸ¥çœ‹å‰5æ¡æ•°æ®
 df.head()
 print(df.head()) 
-# ²é¿´Êı¾İÃèÊöĞÔÍ³¼ÆĞÅÏ¢
+# æŸ¥çœ‹æ•°æ®æè¿°æ€§ç»Ÿè®¡ä¿¡æ¯
 df.describe()
 print(df.describe())
 
-def scatter_plot_by_category(feat, x, y): #Êı¾İµÄ¿ÉÊÓ»¯ 
+def scatter_plot_by_category(feat, x, y): #æ•°æ®çš„å¯è§†åŒ– 
     alpha = 0.5
     gs = df.groupby(feat)
     cs = cm.rainbow(np.linspace(0, 1, len(gs)))
@@ -35,7 +35,7 @@ plt.ylabel('malic_acid')
 plt.title('species')
 plt.show()
 
-plt.figure(figsize=(20, 10)) #ÀûÓÃseaborn¿â»æÖÆÈıÖÖIris»¨²»Í¬²ÎÊıÍ¼
+plt.figure(figsize=(20, 10)) #åˆ©ç”¨seabornåº“ç»˜åˆ¶ä¸‰ç§IrisèŠ±ä¸åŒå‚æ•°å›¾
 for column_index, column in enumerate(df.columns):
     if column == 'species':
         continue
@@ -43,29 +43,29 @@ for column_index, column in enumerate(df.columns):
     sb.violinplot(x='species', y=column, data=df)
 plt.show()
 
-# Ê×ÏÈ¶ÔÊı¾İ½øĞĞÇĞ·Ö£¬¼´»®·Ö³öÑµÁ·¼¯ºÍ²âÊÔ¼¯
-from sklearn.cross_validation import train_test_split #µ÷Èësklearn¿âÖĞ½»²æ¼ìÑé£¬»®·ÖÑµÁ·¼¯ºÍ²âÊÔ¼¯
+# é¦–å…ˆå¯¹æ•°æ®è¿›è¡Œåˆ‡åˆ†ï¼Œå³åˆ’åˆ†å‡ºè®­ç»ƒé›†å’Œæµ‹è¯•é›†
+from sklearn.cross_validation import train_test_split #è°ƒå…¥sklearnåº“ä¸­äº¤å‰æ£€éªŒï¼Œåˆ’åˆ†è®­ç»ƒé›†å’Œæµ‹è¯•é›†
 all_inputs = df[['alcohol', 'malic_acid','ash', 'alcalinity ash','magnesium']].values
 all_species = df['species'].values
 
 (X_train,
  X_test,
  Y_train,
- Y_test) = train_test_split(all_inputs, all_species, train_size=0.8, random_state=1)#80%µÄÊı¾İÑ¡ÎªÑµÁ·¼¯
+ Y_test) = train_test_split(all_inputs, all_species, train_size=0.8, random_state=1)#80%çš„æ•°æ®é€‰ä¸ºè®­ç»ƒé›†
 
-# Ê¹ÓÃ¾ö²ßÊ÷Ëã·¨½øĞĞÑµÁ·
-from sklearn.tree import DecisionTreeClassifier #µ÷Èësklearn¿âÖĞµÄDecisionTreeClassifierÀ´¹¹½¨¾ö²ßÊ÷
-# ¶¨ÒåÒ»¸ö¾ö²ßÊ÷¶ÔÏó
+# ä½¿ç”¨å†³ç­–æ ‘ç®—æ³•è¿›è¡Œè®­ç»ƒ
+from sklearn.tree import DecisionTreeClassifier #è°ƒå…¥sklearnåº“ä¸­çš„DecisionTreeClassifieræ¥æ„å»ºå†³ç­–æ ‘
+# å®šä¹‰ä¸€ä¸ªå†³ç­–æ ‘å¯¹è±¡
 decision_tree_classifier = DecisionTreeClassifier()
-# ÑµÁ·Ä£ĞÍ
+# è®­ç»ƒæ¨¡å‹
 model = decision_tree_classifier.fit(X_train, Y_train)
-# Êä³öÄ£ĞÍµÄ×¼È·¶È
+# è¾“å‡ºæ¨¡å‹çš„å‡†ç¡®åº¦
 print(decision_tree_classifier.score(X_test, Y_test)) 
 
 
-# Ê¹ÓÃÑµÁ·µÄÄ£ĞÍ½øĞĞÔ¤²â£¬ÎªÁË·½±ã£¬
-# °¸ÀıÖ±½Ó°Ñ²âÊÔ¼¯ÀïÃæµÄÊı¾İÄÃ³öÀ´ÈıÌõ
-print(X_test[0:3])#ÀûÓÃ3¸öÊı¾İ½øĞĞ²âÊÔ£¬¼´È¡3¸öÊı¾İ×÷ÎªÄ£ĞÍµÄÊäÈë¶Ë
+# ä½¿ç”¨è®­ç»ƒçš„æ¨¡å‹è¿›è¡Œé¢„æµ‹ï¼Œä¸ºäº†æ–¹ä¾¿ï¼Œ
+# æ¡ˆä¾‹ç›´æ¥æŠŠæµ‹è¯•é›†é‡Œé¢çš„æ•°æ®æ‹¿å‡ºæ¥ä¸‰æ¡
+print(X_test[0:3])#åˆ©ç”¨3ä¸ªæ•°æ®è¿›è¡Œæµ‹è¯•ï¼Œå³å–3ä¸ªæ•°æ®ä½œä¸ºæ¨¡å‹çš„è¾“å…¥ç«¯
 model.predict(X_test[0:3])
-print(model.predict(X_test[0:3]))#Êä³ö²âÊÔµÄ½á¹û£¬¼´Êä³öÄ£ĞÍÔ¤²âµÄ½á¹û
+print(model.predict(X_test[0:3]))#è¾“å‡ºæµ‹è¯•çš„ç»“æœï¼Œå³è¾“å‡ºæ¨¡å‹é¢„æµ‹çš„ç»“æœ
  
